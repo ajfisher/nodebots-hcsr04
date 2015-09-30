@@ -1,0 +1,9 @@
+{
+  "customBuildProperties": "build.path=bin/firmata/uno,build.warn_data_percentage=75",
+  "fqbn": "arduino:avr:uno",
+  "hardwareFolders": "/Users/andrewfisher/Downloads/arduino.app/Contents/Java/hardware,/Users/andrewfisher/Library/Arduino15/packages",
+  "librariesFolders": "/Users/andrewfisher/Documents/Arduino/libraries,/Users/andrewfisher/Downloads/arduino.app/Contents/Java/libraries,/Users/andrewfisher/Downloads/arduino.app/Contents/Java/hardware/arduino/avr/libraries",
+  "runtime.ide.version": "10606",
+  "sketchLocation": "/Users/andrewfisher/dev/nodebots-hcsr04/firmware/build/hcsr04_firmata/hcsr04_firmata.ino",
+  "toolsFolders": "/Users/andrewfisher/Downloads/arduino.app/Contents/Java/tools-builder,/Users/andrewfisher/Downloads/arduino.app/Contents/Java/hardware/tools/avr,/Users/andrewfisher/Library/Arduino15/packages"
+}

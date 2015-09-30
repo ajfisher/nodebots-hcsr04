@@ -1,0 +1,39 @@
+{
+  "name": "nodebots-hcsr04",
+  "version": "0.0.1",
+  "description": "Firmware used to make the HC-SR04 ultrasonic sensor work.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajfisher/nodebots-hcsr04.git"
+  },
+  "keywords": [
+    "johnny-five",
+    "ping",
+    "sensor",
+    "nodebots",
+    "arduino",
+    "hc-sr04",
+    "i2c",
+    "i2c",
+    "backpack"
+  ],
+  "author": "Andrew Fisher <ajfisher.td@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ajfisher/nodebots-hcsr04/issues"
+  },
+  "homepage": "https://github.com/ajfisher/nodebots-hcsr04#readme",
+  "dependencies": {
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.1",
+    "grunt-exec": "^0.4.6"
+  }
+}
