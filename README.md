@@ -47,7 +47,7 @@ usual processes you have.
 ## Developing
 
 Generally speaking it's a case of simply cloning the repo, doing an npm install
-and doing development as required.
+and doing development as normal.
 
 One thing to note is that all pull requests require rebuilding the application 
 in order to generate a new set of builds. For this it's handy to make sure you
@@ -57,6 +57,6 @@ all you need.
 `ARDUINO_PATH` is simply a full path to the arduino run time, noting that you also
 must have a version more recent than 1.6.2 in order to get command line benefits.
 
-
+To make a build, simply `grunt compile` and it should do everything needed.
 
 
