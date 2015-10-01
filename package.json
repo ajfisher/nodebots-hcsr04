@@ -1,6 +1,6 @@
 {
   "name": "nodebots-hcsr04",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Firmware used to make the HC-SR04 ultrasonic sensor work.",
   "main": "index.js",
   "directories": {
