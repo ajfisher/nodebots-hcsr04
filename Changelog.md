@@ -1,6 +1,11 @@
 # Changelog for HC-SR04 ultrasonic sensor 
 
+### 0.2.0
 
+* Added start of test framework including test to ensure that the hex files all
+exist and are non zero length and use of manifest to guide the test process.
+* Changes to manifest log in order to provide better 
+* refactor of build to use `pro-mini` naming per @noopkat's avrgirl.
 
 ### 0.1.1
 
