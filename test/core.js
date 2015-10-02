@@ -2,7 +2,7 @@ var fs = require("fs");
 var path = require("path");
 var manifest = require("../manifest.json");
 
-var boards = ["uno", "nano"];
+var boards = ["uno", "nano", "pro-mini"];
 
 exports["Devices - Library"] = {
     setUp: function(done) {
@@ -21,9 +21,9 @@ exports["Devices - Library"] = {
             try {
                 // test file exists
                 var file_stat = fs.statSync(p);
-                test.ok(true, "File exists");
+                test.ok(true, board + " hex file exists");
             } catch (e) {
-                test.ok(false, "Hex file " + p + " doesn't exist");
+                test.ok(false, board + " hex file doesn't exist");
             }
         });
         test.done();
@@ -35,7 +35,7 @@ exports["Devices - Library"] = {
             var p = path.join(path.dirname(__filename), "..", manifest.bins, board , manifest.hexPath);
             // test file has bytes
             var file_stat = fs.statSync(p);
-            test.notEqual(file_stat.size, 0, "Hex file " + p + " is Zero bytes");
+            test.notEqual(file_stat.size, 0, board + " hex file is not Zero bytes");
         });
         test.done();
     },
