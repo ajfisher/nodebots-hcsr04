@@ -51,7 +51,7 @@ and doing development as normal.
 
 One thing to note is that all pull requests require rebuilding the application 
 in order to generate a new set of builds. For this it's handy to make sure you
-have the `ARDUINO_PATH` environment variable set and then a `grung build` is
+have the `ARDUINO_PATH` environment variable set and then a `grunt build` is
 all you need.
 
 `ARDUINO_PATH` is simply a full path to the arduino run time, noting that you also
@@ -59,4 +59,8 @@ must have a version more recent than 1.6.2 in order to get command line benefits
 
 To make a build, simply `grunt compile` and it should do everything needed.
 
+## Tests
 
+Before issuing a pull request, please deliver appropriate tests and also make
+sure the test suite has been run completely - this will ensure build and 
+hex files are in the right location.

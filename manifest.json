@@ -1,4 +1,4 @@
 {
     "bins": "/firmware/bin/firmata/",
-
+    "hexPath": "/sketch/hcsr04_firmata.cpp.hex"
 }
