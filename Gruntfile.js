@@ -64,13 +64,21 @@ module.exports = function(grunt) {
                     ]
             },
         },
+        nodeunit: {
+            all: ['test/',],
+            options: {
+                reporter: "verbose",
+            },
+        },
     });
  
     // load the tasks
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
+    grunt.registerTask('test', ['nodeunit:all']);
     grunt.registerTask('build', ['clean', 'copy']);
     grunt.registerTask('compile', ['build', 'exec:compile_firmata:uno', 'exec:compile_firmata:nano', 'exec:compile_firmata:pro-mini' ]);
 };
