@@ -1,5 +1,13 @@
 # Changelog for HC-SR04 ultrasonic sensor 
 
+### 0.2.1
+
+* updated manifest file to reflect new structure to account for both custom firmata 
+and backpack capable firmware.
+* Updated tests and manifest to reflect the way arduino is producing the hex files in
+1.6.6 Nightly
+* Fixed promini in line with avrgirl
+
 ### 0.2.0
 
 * Added start of test framework including test to ensure that the hex files all

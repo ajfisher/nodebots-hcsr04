@@ -17,13 +17,19 @@ Installation can be done manually using:
 npm install nodebots-hcsr04
 ```
 
-### Future process
+However if you are using johnny five then you can use 
+[Interchange](http://github.com/ajfisher/nodebots-interchange) instead
+
+## Firmware installation using Interchange
+
+Interchange is the preferred method of installation with the following instruction
+being the way to do it.
 
 ```
-interchange install hcsr04
+interchange install hc-sr04 [--firmata] [board args]
 ```
 
-## Firmware installation
+Using the `--firmata` switch will install the custom firmata with  
 
 Currently supported devices are:
 
@@ -39,7 +45,7 @@ means you don't need to install arduino to be able to install this on your board
 interchange install hcsr04 -p <port> -b <board>
 ```
 
-If your board isn't supported then it's still pretty east but you will need
+If your board isn't supported then it's still pretty easy but you will need
 arduino or GCC. Go to the `firmware/build/hcsr04_backpack` folder and compile
 the hcsr04_backpack.ino file and then upload it to the board using whatever
 usual processes you have.
@@ -58,6 +64,11 @@ all you need.
 must have a version more recent than 1.6.2 in order to get command line benefits.
 
 To make a build, simply `grunt compile` and it should do everything needed.
+
+### Arduino Version
+
+Currently this repo uses the Arduino 1.6.6 build in order to maintain consistency
+of build process with regards to where compiled Hexes end up.
 
 ## Tests
 
