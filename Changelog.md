@@ -1,6 +1,6 @@
 # Changelog for HC-SR04 ultrasonic sensor 
 
-### 0.2.1
+### 0.2.2
 
 * updated manifest file to reflect new structure to account for both custom firmata 
 and backpack capable firmware.
