@@ -11,5 +11,4 @@
  /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/USBAPI.h \
  /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Arduino.h \
  /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/variants/standard/pins_arduino.h \
- /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/IPAddress.h \
- /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Printable.h
+ /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/IPAddress.h

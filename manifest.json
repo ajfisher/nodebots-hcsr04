@@ -1,4 +1,10 @@
 {
-    "bins": "/firmware/bin/firmata/",
-    "hexPath": "/sketch/hcsr04_firmata.cpp.hex"
+    "backpack": {
+        "bins": "/firmware/bin/firmata/",
+        "hexPath": "hcsr04_firmata.ino.hex"
+    },
+    "firmata": {
+        "bins": "/firmware/bin/firmata/",
+        "hexPath": "hcsr04_firmata.ino.hex"
+    }
 }

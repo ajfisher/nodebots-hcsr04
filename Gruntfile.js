@@ -8,7 +8,7 @@ var boards = {
         cpu: "atmega328",
         package: "arduino:avr:nano:cpu=atmega328",
     },
-    "pro-mini": {
+    "promini": {
         cpu: "16MHzatmega328",
         package: "arduino:avr:pro:cpu=16MHzatmega328",
     },
@@ -80,5 +80,5 @@ module.exports = function(grunt) {
 
     grunt.registerTask('test', ['nodeunit:all']);
     grunt.registerTask('build', ['clean', 'copy']);
-    grunt.registerTask('compile', ['build', 'exec:compile_firmata:uno', 'exec:compile_firmata:nano', 'exec:compile_firmata:pro-mini' ]);
+    grunt.registerTask('compile', ['build', 'exec:compile_firmata:uno', 'exec:compile_firmata:nano', 'exec:compile_firmata:promini' ]);
 };

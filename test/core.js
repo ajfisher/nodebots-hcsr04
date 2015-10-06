@@ -2,9 +2,9 @@ var fs = require("fs");
 var path = require("path");
 var manifest = require("../manifest.json");
 
-var boards = ["uno", "nano", "pro-mini"];
+var boards = ["uno", "nano", "promini"];
 
-exports["Devices - Library"] = {
+exports["Devices - Firmata Library"] = {
     setUp: function(done) {
         done();
     },
@@ -13,26 +13,26 @@ exports["Devices - Library"] = {
         done();
     },
 
-    firmwareExists: function(test) {
+    firmataFirmwareExists: function(test) {
         // tests that the builds exist properly.
         test.expect(boards.length);
         boards.forEach(function(board) {
-            var p = path.join(path.dirname(__filename), "..", manifest.bins, board , manifest.hexPath);
+            var p = path.join(path.dirname(__filename), "..", manifest.firmata.bins, board , manifest.firmata.hexPath);
             try {
                 // test file exists
                 var file_stat = fs.statSync(p);
                 test.ok(true, board + " hex file exists");
             } catch (e) {
-                test.ok(false, board + " hex file doesn't exist");
+                test.ok(false, board + " hex file doesn't exist at " + p);
             }
         });
         test.done();
     },
 
-    firmwareNonZero: function(test) {
+    firmataFirmwareNonZero: function(test) {
         test.expect(boards.length);
         boards.forEach(function(board) {
-            var p = path.join(path.dirname(__filename), "..", manifest.bins, board , manifest.hexPath);
+            var p = path.join(path.dirname(__filename), "..", manifest.firmata.bins, board , manifest.firmata.hexPath);
             // test file has bytes
             var file_stat = fs.statSync(p);
             test.notEqual(file_stat.size, 0, board + " hex file is not Zero bytes");

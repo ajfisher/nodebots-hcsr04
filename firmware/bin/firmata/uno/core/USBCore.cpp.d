@@ -9,4 +9,5 @@
  /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Stream.h \
  /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Print.h \
  /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Printable.h \
- /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/variants/standard/pins_arduino.h
+ /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/variants/standard/pins_arduino.h \
+ /Users/ajfisher/Downloads/NArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/PluggableUSB.h
