@@ -18,7 +18,8 @@ module.exports = function(grunt) {
  
     // configure the tasks
     grunt.initConfig({
-        exec: {
+        // exec: create task dynamically see end of file for where this happens.
+        /**exec: {
             compile_firmata: {
                 cwd: "firmware/",
                 command:function(board) {
@@ -26,7 +27,7 @@ module.exports = function(grunt) {
                     " --pref build.path=bin/firmata/" + board +  " build/hcsr04_firmata/hcsr04_firmata.ino";
                 },
             },
-        },
+        },**/
 
         copy: {
             options: {
@@ -44,7 +45,7 @@ module.exports = function(grunt) {
             backpack: {
                 cwd: 'firmware/src/',
                 flatten: true,
-                src: [ 'controller_src/backpack_backpack/*' ],
+                src: [ 'controller_src/hcsr04_backpack/*' ],
                 dest: 'firmware/build/hcsr04_backpack/',
                 expand: true,
                 filter: 'isFile',
@@ -78,7 +79,23 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
+    // dynamically create the compile targets for the various boards
+    Object.keys(boards).forEach(function(key) {
+        grunt.config(["exec", "firmata_" + key], {
+            command:function() {
+                return arduino + " --verify --verbose-build --board "  + boards[key].package + 
+                " --pref build.path=bin/firmata/" + key +  " build/hcsr04_firmata/hcsr04_firmata.ino";
+            },
+        });
+        grunt.config(["exec", "backpack_" + key], {
+            command:function() {
+                return arduino + " --verify --verbose-build --board "  + boards[key].package + 
+                " --pref build.path=bin/backpack/" + key +  " build/hcsr04_backpack/hcsr04_backpack.ino";
+            },
+        });
+    });
+
     grunt.registerTask('test', ['nodeunit:all']);
     grunt.registerTask('build', ['clean', 'copy']);
-    grunt.registerTask('compile', ['build', 'exec:compile_firmata:uno', 'exec:compile_firmata:nano', 'exec:compile_firmata:promini' ]);
+    grunt.registerTask('compile', ['build', 'exec']);
 };
