@@ -41,7 +41,7 @@ void setup() {
 
     if (state == CONFIG) {
         run_config();
-    } elseif (state == RUNNING) {
+    } else if (state == RUNNING) {
         Wire.begin(DEFAULT_I2C_SENSOR_ADDRESS);
         Wire.onRequest(requestData);
     }

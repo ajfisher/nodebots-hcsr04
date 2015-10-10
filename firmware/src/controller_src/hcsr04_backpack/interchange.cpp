@@ -15,3 +15,10 @@ void config_check() {
         state = RUNNING;
     }
 }
+
+void run_config() {
+    // runs the config application
+    Serial.begin(9600);
+    Serial.println(F("HCSR04 backpack firmware. Enter command followed by CRLF. H for help"));
+
+}

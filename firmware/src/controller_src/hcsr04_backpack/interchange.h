@@ -29,8 +29,8 @@ extern states state;
 
 #define INTERCHANGE_VERSION "0.1.0"
 
-
-void config_check();
+void config_check(); // checks to see if config pin is gone high
+void run_config(); // runs the config application.
 
 
 #endif
