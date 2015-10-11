@@ -6,9 +6,10 @@
 #define PING_PIN 8
 
 #ifndef _DEBUG
-    #define _DEBUG false
+    #define _DEBUG true
 #endif
 
 #ifndef _VDEBUG
-    #define _VDEBUG false
+    // verbose debug
+    #define _VDEBUG true
 #endif

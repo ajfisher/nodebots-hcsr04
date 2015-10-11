@@ -47,16 +47,23 @@ void setup() {
     }
 
 #if _DEBUG
-    Serial.begin(9600);
-    Serial.println("Ping Sensor I2C");
+    if (state != CONFIG) {
+        Serial.begin(9600);
+    }
+
+    Serial.println(F("HCSR04 FIRMWARE - DEBUG MODE"));
 #endif
 }
 
 
 void loop() {
 
-    get_distance();
-    delay(20);
+    if (state == RUNNING) {
+        get_distance();
+        delay(20);
+    } else if (state == CONFIG) {
+        process_message();
+    }
 }
 
 void disablePCInterrupt() {
