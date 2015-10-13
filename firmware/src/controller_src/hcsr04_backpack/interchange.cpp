@@ -2,31 +2,31 @@
 #include "interchange.h"
 
 extern states state = BOOT;
-extern Command commands[MAX_COMMANDS];
+Command commands[MAX_COMMANDS];
 
 uint8_t current_command = 0;
 
 void interchange_init() {
     // initialises the library.
-
-//    attach_command("H", "Print out the help list", command_help);
-    commands[0]=(Command){"H", command_help};
+    attach_command("HELP", "Print out the help list", command_help);
 }
 
-void attach_command(char* code, String help, CommandFuncPtr cb) {
+void attach_command(char code[], String help, CommandFuncPtr cb) {
     // attaches the command to the command list.
 
     if (current_command < MAX_COMMANDS) {
         // add the command to the list
-        Serial.println(code);
-        commands[current_command] = (Command){*code, *cb};
+        Command c;
+        strncpy(c.code, code, COMMAND_CODE_LENGTH);
+        c.help = help;
+        c.cmd = cb;
+        commands[current_command] = c;
         current_command++;
     } else {
         // throw error and don't do it. 
         Serial.println("MAX COMMANDS exceeded");
     }
 }
-
 
 void config_check() {
     // sees if the config pin is set and if so drop into config mode
@@ -48,6 +48,7 @@ void run_config() {
     Serial.print(F("Interchange version: "));
     Serial.println(INTERCHANGE_VERSION);
     Serial.println(F("\nEnter command followed by NL. H for help"));
+    interchange_init();
 }
 
 void process_message() {
@@ -62,7 +63,6 @@ void process_message() {
 }
 
 void command_help(String args) {
-
     Serial.println("This is help");
 }
 

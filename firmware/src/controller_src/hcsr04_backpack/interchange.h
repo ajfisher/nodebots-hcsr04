@@ -4,18 +4,16 @@
 #define INTERCHANGE_H
 
 // set up the command objectsi
-#define COMMAND_CODE_LENGTH 3
-typedef void (* CommandFuncPtr)(String args); // typedef to the command
-
+#define COMMAND_CODE_LENGTH 5
+typedef void (*CommandFuncPtr)(String args); // typedef to the command
 
 struct Command {
    char code[COMMAND_CODE_LENGTH]; // the code used to call the command
-   //String help; // the snippet used for help
+   String help; // the snippet used for help
    CommandFuncPtr cmd; // pointer to the command to be called
 };
 
 #define MAX_COMMANDS 10
-
 
 #include <EEPROM.h>
 
@@ -53,13 +51,12 @@ extern states state;
 #define INTERCHANGE_VERSION "0.1.0"
 
 void interchange_init(); // initialises the interchange lib.
-void attach_command(char* code, String help, CommandFuncPtr cb); 
+void attach_command(char code[], String help, CommandFuncPtr cb); 
 void config_check(); // checks to see if config pin is gone high
 void run_config(); // runs the config application.
 void process_message(); // processes an incoming message.
 
 // default commands
 void command_help(String);
-
 
 #endif

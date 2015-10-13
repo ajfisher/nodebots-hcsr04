@@ -38,8 +38,6 @@ ISR(PCINT0_vect) {
 
 void setup() {
 
-    com[0] = (Command){"H", command_help};
-
     // check to see if we're in config mode
     config_check();
 
