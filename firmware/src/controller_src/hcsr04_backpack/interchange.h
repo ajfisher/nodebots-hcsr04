@@ -53,10 +53,14 @@ extern states state;
 void interchange_init(); // initialises the interchange lib.
 void attach_command(char code[], String help, CommandFuncPtr cb); 
 void config_check(); // checks to see if config pin is gone high
-void run_config(); // runs the config application.
+void run_config(HardwareSerial serport); // runs the config application.
 void process_message(); // processes an incoming message.
 
 // default commands
-void command_help(String);
+void command_help(String args);
+void command_dump(String args);
+void command_set_i2c(String args);
+void command_set_firmware_id(String args);
+void command_set_creator_id(String args);
 
 #endif

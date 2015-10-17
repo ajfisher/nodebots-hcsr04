@@ -2,8 +2,6 @@
 #include "interchange.h"
 #include <avr/interrupt.h>
 
-Command com[4];
-
 #if _VDEBUG
     #define PING_FREQUENCY 1000 // milliseconds between pings
 #else
@@ -36,13 +34,21 @@ ISR(PCINT0_vect) {
     }
 }
 
+// TODO remove this
+void test_command(String args) {
+    // a test command
+    Serial.println("This is just a test");
+}
+
 void setup() {
 
     // check to see if we're in config mode
     config_check();
 
     if (state == CONFIG) {
-        run_config();
+        run_config(Serial);
+        attach_command("CID", F("Sets the creator id. \n\n \
+                eg: cID 0x09 sets the creator id to 0x09"), test_command); 
     } else if (state == RUNNING) {
         Wire.begin(DEFAULT_I2C_SENSOR_ADDRESS);
         Wire.onRequest(requestData);
