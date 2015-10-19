@@ -6,7 +6,7 @@ Command commands[MAX_COMMANDS]; // list of commands
 Stream* ser; // mapping to a serial port
 String command; // current command being worked on.
 
-uint8_t current_command = 0;
+uint8_t current_commands = 0;
 
 void interchange_init() {
     // initialises the commands.
@@ -23,14 +23,14 @@ void interchange_init() {
 void attach_command(char code[], String help, CommandFuncPtr cb) {
     // attaches the command to the command list.
 
-    if (current_command < MAX_COMMANDS) {
+    if (current_commands < MAX_COMMANDS) {
         // add the command to the list
         Command c;
         strncpy(c.code, code, COMMAND_CODE_LENGTH);
         c.help = help;
         c.cmd = cb;
-        commands[current_command] = c;
-        current_command++;
+        commands[current_commands] = c;
+        current_commands++;
     } else {
         // throw error and don't do it. 
         ser->println("MAX COMMANDS exceeded");
@@ -92,15 +92,13 @@ void process_command(String command) {
     String argv[2]; // two tokens, the command and the params.
 
     int8_t split = command.indexOf(' ');
-    ser->print("Position of split");
-    ser->println(split);
     argv[0] = command.substring(0, split);
     if (split > 0) {
         argv[1] = command.substring(split+1);
     }
     int8_t cmd_index = command_item(argv[0]);
-    if (cmd_index > 0) {
-        ser->println("Got a command");
+    if (cmd_index >= 0) {
+        commands[cmd_index].cmd(argv[1]);
     } else {
         ser->println("Invalid command");
     }
@@ -111,13 +109,10 @@ int command_item(String cmd_code) {
     // this method does all of the comparison stuff to determine the id of a command
     // which it then passes back
 
-    ser->print("Looking for");
-    ser->println(cmd_code);
-    int i=0;
+    uint8_t i=0;
     boolean arg_found = false;
     // look through the array of commands until you find it or else you exhaust the list.
-    while (!arg_found && i<MAX_COMMANDS) {
-        ser->println(commands[i].code);
+    while (!arg_found && i<current_commands) {
         if (cmd_code.equalsIgnoreCase((String)commands[i].code)) {
             arg_found = true;
         } else {
@@ -160,11 +155,11 @@ void command_set_creator_id(String args) {
 void command_help(String args) {
     // provides help details.
 
-    uint8_t cmd_index;
+    int8_t cmd_index;
     if (args.length() >=2) {
         // we attempt to see if there is a command we should spit out instead.
-        //cmd_index = command_item(args);
-        if (cmd_index < 0) ser->println(F("Syntax error please use a command"));
+        cmd_index = command_item(args);
+        if (cmd_index < 0) ser->println(F("Syntax error please provide a command"));
     } else {
         cmd_index = -1;
     }
@@ -189,9 +184,9 @@ void command_help(String args) {
         ser->println();
     } else {
         ser->println(F("HELP"));
-        //ser->print(commands[cmd_index].code);
+        ser->print(commands[cmd_index].code);
         ser->print(": ");
-        //ser->println(commands[cmd_index].help);
+        ser->println(commands[cmd_index].help);
     }
 }
 
