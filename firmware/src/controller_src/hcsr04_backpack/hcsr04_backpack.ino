@@ -46,9 +46,8 @@ void setup() {
     config_check();
 
     if (state == CONFIG) {
+        Serial.begin(9600);
         run_config(Serial);
-        attach_command("CID", F("Sets the creator id. \n\n \
-                eg: cID 0x09 sets the creator id to 0x09"), test_command); 
     } else if (state == RUNNING) {
         Wire.begin(DEFAULT_I2C_SENSOR_ADDRESS);
         Wire.onRequest(requestData);
@@ -70,7 +69,7 @@ void loop() {
         get_distance();
         delay(20);
     } else if (state == CONFIG) {
-        process_message();
+        interchange_commands();
     }
 }
 

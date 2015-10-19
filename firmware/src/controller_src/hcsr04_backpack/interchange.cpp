@@ -2,8 +2,9 @@
 #include "interchange.h"
 
 extern states state = BOOT;
-Command commands[MAX_COMMANDS];
-HardwareSerial *ser;
+Command commands[MAX_COMMANDS]; // list of commands
+Stream* ser; // mapping to a serial port
+String command; // current command being worked on.
 
 uint8_t current_command = 0;
 
@@ -49,20 +50,37 @@ void config_check() {
     }
 }
 
-void run_config(HardwareSerial serport) {
+void run_config(Stream& serport) {
     // runs the config application
     
-    ser = &serport;
-    
-    ser->begin(9600);
+    ser = &serport; // assign the stream to the serial port
+
     ser->println(F("HCSR04 backpack firmware."));
     ser->print(F("Interchange version: "));
     ser->println(INTERCHANGE_VERSION);
-    ser->println(F("\nEnter command followed by NL. H for help"));
+    ser->println(F("\nEnter command, followed by NL. Type HELP for more."));
     interchange_init();
 }
 
-void process_message() {
+void interchange_commands() {
+    // this is effectively the "main" loop of the interchange config system.
+
+    while (ser->available() > 0) {
+        char ch = ser->read();
+        if (ch == 10) {
+            // new line so now we can attempt to process the line
+            process_command(command);
+            command = "";
+        } else if ((ch < 10 && ch > 0) || (ch > 10 && ch < 32)) {
+          // ignore control chars up to space and allow nulls to pass through
+         ; 
+        } else {
+            command += String(ch);
+        }
+    }
+}
+
+void process_command(String command) {
     // waits for the serial process to complete and then 
 
     // create a buffer
@@ -71,7 +89,49 @@ void process_message() {
     // process the message by pushing out to the other functions with appropriate
     // paramaters
 
+    String argv[2]; // two tokens, the command and the params.
+
+    int8_t split = command.indexOf(' ');
+    ser->print("Position of split");
+    ser->println(split);
+    argv[0] = command.substring(0, split);
+    if (split > 0) {
+        argv[1] = command.substring(split+1);
+    }
+    int8_t cmd_index = command_item(argv[0]);
+    if (cmd_index > 0) {
+        ser->println("Got a command");
+    } else {
+        ser->println("Invalid command");
+    }
+
 }
+
+int command_item(String cmd_code) {
+    // this method does all of the comparison stuff to determine the id of a command
+    // which it then passes back
+
+    ser->print("Looking for");
+    ser->println(cmd_code);
+    int i=0;
+    boolean arg_found = false;
+    // look through the array of commands until you find it or else you exhaust the list.
+    while (!arg_found && i<MAX_COMMANDS) {
+        ser->println(commands[i].code);
+        if (cmd_code.equalsIgnoreCase((String)commands[i].code)) {
+            arg_found = true;
+        } else {
+            i++;
+        }
+    }
+
+    if (arg_found) {
+        return (i);
+    } else {
+        return (-1);
+    }
+}
+
 
 void command_dump(String args) {
     // dumps the details of the firmware out.
@@ -133,8 +193,6 @@ void command_help(String args) {
         ser->print(": ");
         //ser->println(commands[cmd_index].help);
     }
-
-
 }
 
 

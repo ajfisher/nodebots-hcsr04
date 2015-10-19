@@ -53,8 +53,12 @@ extern states state;
 void interchange_init(); // initialises the interchange lib.
 void attach_command(char code[], String help, CommandFuncPtr cb); 
 void config_check(); // checks to see if config pin is gone high
-void run_config(HardwareSerial serport); // runs the config application.
-void process_message(); // processes an incoming message.
+void run_config(Stream& serport); // runs the config application.
+void interchange_commands(); // the main loop that processes the commands.
+
+// command related methods
+int command_item(String cmd_code); // given a string, find the related command
+void process_command(String command); // processes an incoming message.
 
 // default commands
 void command_help(String args);
