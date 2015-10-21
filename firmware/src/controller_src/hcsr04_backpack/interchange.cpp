@@ -132,6 +132,44 @@ void command_dump(String args) {
     // dumps the details of the firmware out.
 
     ser->println("Dumping data");
+
+    ser->print(F("{"));
+    
+    ser->print(F("\"fw_id\":"));
+    if (FIRMWARE_ID == NULL) {
+        ser->print(F("\"undefined\""));
+    } else {
+        ser->print(FIRMWARE_ID);
+    }
+    ser->print(F(","));
+
+
+    ser->print(F("\"compile_date\":\""));
+    ser->print(__DATE__);
+//    ser->print(F("\",")):
+
+    ser->print(F("\"compile_file\":\""));
+    ser->print(__FILE__);
+ //   ser->print(F("\",")):
+   
+    ser->println(F("}"));
+
+
+    /**
+    {
+        "fw_id": 0x05,
+        "creator_id": 0x02,
+        "fw_version": "x.y.z",
+        "ic_version": "x.y.z",
+        "use_custom_address": true | false,
+        "i2c_address": 0x57,
+        "compile_date": "compile date",
+        "compile_filename": __FILE__
+    }
+    **/
+
+
+
 }
 
 void command_set_i2c(String args) {

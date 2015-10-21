@@ -34,6 +34,10 @@ Byte    Type    Register
 #define INTERCHANGE_FIRMWARE_ID 0x0A
 #define INTERCHANGE_CREATOR_ID 0x0B
 
+#ifndef FIRMWARE_ID
+#define FIRMWARE_ID NULL
+#endif
+
 enum states {
     BOOT,
     CONFIG,
