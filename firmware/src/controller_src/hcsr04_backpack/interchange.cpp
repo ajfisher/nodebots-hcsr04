@@ -165,7 +165,7 @@ void command_dump(String args) {
     if (firmware_id == 0x0) {
         ser->print(F("\"undefined\""));
     } else {
-        ser->print(creator_id);
+        ser->print(firmware_id);
     }
     ser->print(F(","));
 
@@ -186,7 +186,7 @@ void command_dump(String args) {
     ser->print(F(","));
 
     ser->print(F("\"i2c_address\":"));
-    ser->print(i2c_address);
+    ser->print(i2c_address, HEX);
     ser->print(F(","));
 
     ser->print(F("\"ic_version\":\""));
@@ -212,25 +212,46 @@ void command_clear_eeprom(String args) {
 
 void command_set_i2c(String args) {
     // sets the I2C address of the firmware
-    //
+    // This address is 0x01 -> 0xFE so only need to read the
+    // one byte off the args list.
     if (args.length() <= 0) {
         ser->println(F("ERR No address supplied"));
         return;
     }
-    ser->println("Setting the I2C address");
+    
+    i2c_address = (byte)args[0];
+    EEPROM.write(INTERCHANGE_I2C_ADDRESS, i2c_address);
+    ser->print(F("OK I2C address set "));
+    ser->println(i2c_address, HEX);
 
 }
 
 void command_set_firmware_id(String args) {
     // sets the firmware id
 
-    ser->println("Setting the Firmware ID");
+    if (args.length() <= 0) {
+        ser->println(F("ERR No firmware ID supplied"));
+        return;
+    }
+    
+    firmware_id = (byte)args[0];
+    EEPROM.write(INTERCHANGE_FIRMWARE_ID, firmware_id);
+    ser->print(F("OK firmware ID set "));
+    ser->println(firmware_id, HEX);
 }
 
 void command_set_creator_id(String args) {
     // sets the creator id
 
-    ser->println("Setting the Creator ID");
+    if (args.length() <= 0) {
+        ser->println(F("ERR No creator ID supplied"));
+        return;
+    }
+    
+    creator_id = (byte)args[0];
+    EEPROM.write(INTERCHANGE_CREATOR_ID, creator_id);
+    ser->print(F("OK creator ID set "));
+    ser->println(creator_id, HEX);
 }
 
 void command_help(String args) {
