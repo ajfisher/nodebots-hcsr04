@@ -34,8 +34,15 @@ Byte    Type    Register
 #define INTERCHANGE_FIRMWARE_ID 0x0A
 #define INTERCHANGE_CREATOR_ID 0x0B
 
-#ifndef FIRMWARE_ID
-#define FIRMWARE_ID NULL
+#define INTERCHANGE_EEPROM_DEFAULT 0xFF
+
+// tests for a default I2C address and sets one if needed
+#ifndef FIRMWARE_I2C_ADDRESS
+#define FIRMWARE_I2C_ADDRESS 0x75
+#endif
+
+#ifndef FIRMWARE_VERSION
+#define FIRMWARE_VERSION "0.0.0"
 #endif
 
 enum states {
@@ -66,6 +73,7 @@ void process_command(String command); // processes an incoming message.
 
 // default commands
 void command_help(String args);
+void command_clear_eeprom(String args);
 void command_dump(String args);
 void command_set_i2c(String args);
 void command_set_firmware_id(String args);

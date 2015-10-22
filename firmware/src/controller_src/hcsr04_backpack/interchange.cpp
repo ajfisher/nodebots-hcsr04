@@ -6,11 +6,17 @@ Command commands[MAX_COMMANDS]; // list of commands
 Stream* ser; // mapping to a serial port
 String command; // current command being worked on.
 
+byte firmware_id = 0x0;
+byte creator_id = 0x0;
+bool custom_i2c_addr = false;
+byte i2c_address = 0x0;
+
 uint8_t current_commands = 0;
 
 void interchange_init() {
     // initialises the commands.
     attach_command("HELP", F("Prints this list. Try HELP <CMD> for more"), command_help);
+    attach_command("CLR", F("Clears the eeprom settings"), command_clear_eeprom);
     attach_command("DUMP", F("Prints out all of the information about this firmware"), command_dump);
     attach_command("I2C", F("Sets the I2C address and custom firmware flag.\n\n \
                 eg: I2C 0x57 1 sets address 0x57 & custom flag bit"), command_set_i2c);
@@ -18,6 +24,27 @@ void interchange_init() {
                 eg: FID 0x02 sets the firmware id to 0x02"), command_set_firmware_id); 
     attach_command("CID", F("Sets the creator id. \n\n \
                 eg: cID 0x09 sets the creator id to 0x09"), command_set_creator_id); 
+
+    if (EEPROM.read(INTERCHANGE_CREATOR_ID) != INTERCHANGE_EEPROM_DEFAULT) {
+        creator_id = EEPROM.read(INTERCHANGE_CREATOR_ID);
+    }
+
+    if (EEPROM.read(INTERCHANGE_FIRMWARE_ID) != INTERCHANGE_EEPROM_DEFAULT) {
+        firmware_id = EEPROM.read(INTERCHANGE_FIRMWARE_ID);
+    }
+
+    if (EEPROM.read(INTERCHANGE_USE_CUSTOM) != INTERCHANGE_EEPROM_DEFAULT) {
+        custom_i2c_addr = (bool)EEPROM.read(INTERCHANGE_USE_CUSTOM);
+    }
+
+    if (custom_i2c_addr) {
+        if (EEPROM.read(INTERCHANGE_I2C_ADDRESS) != INTERCHANGE_EEPROM_DEFAULT) {
+            i2c_address = EEPROM.read(INTERCHANGE_I2C_ADDRESS);
+        }
+    } else {
+        i2c_address = FIRMWARE_I2C_ADDRESS;
+    }
+
 }
 
 void attach_command(char code[], String help, CommandFuncPtr cb) {
@@ -136,40 +163,61 @@ void command_dump(String args) {
     ser->print(F("{"));
     
     ser->print(F("\"fw_id\":"));
-    if (FIRMWARE_ID == NULL) {
+    if (firmware_id == 0x0) {
         ser->print(F("\"undefined\""));
     } else {
-        ser->print(FIRMWARE_ID);
+        ser->print(creator_id);
     }
     ser->print(F(","));
 
+    ser->print(F("\"creator_id\":"));
+    if (creator_id == 0x0) {
+        ser->print(F("\"undefined\""));
+    } else {
+        ser->print(creator_id);
+    }
+    ser->print(F(","));
+
+    ser->print(F("\"use_custom_addr\":"));
+    if (custom_i2c_addr) {
+        ser->print(F("true"));
+    } else {
+        ser->print(F("false"));
+    }
+    ser->print(F(","));
+
+    ser->print(F("\"i2c_address\":"));
+    ser->print(i2c_address);
+    ser->print(F(","));
+
+    ser->print(F("\"ic_version\":\""));
+    ser->print(INTERCHANGE_VERSION);
+    ser->print(F("\","));
+
+    ser->print(F("\"fw_version\":\""));
+    ser->print(FIRMWARE_VERSION);
+    ser->print(F("\","));
 
     ser->print(F("\"compile_date\":\""));
-    ser->print(__DATE__);
-//    ser->print(F("\",")):
+    ser->print(__DATE__ " " __TIME__);
+    ser->print(F("\""));
 
-    ser->print(F("\"compile_file\":\""));
-    ser->print(__FILE__);
- //   ser->print(F("\",")):
-   
     ser->println(F("}"));
 
 
     /**
     {
-        "fw_id": 0x05,
-        "creator_id": 0x02,
         "fw_version": "x.y.z",
-        "ic_version": "x.y.z",
-        "use_custom_address": true | false,
-        "i2c_address": 0x57,
-        "compile_date": "compile date",
-        "compile_filename": __FILE__
     }
     **/
 
 
 
+}
+
+void command_clear_eeprom(String args) {
+    // sets the EEPROM address back to default
+    ser->println("Clearing the EEPROM addresses");
 }
 
 void command_set_i2c(String args) {
