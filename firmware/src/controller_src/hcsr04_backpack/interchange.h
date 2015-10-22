@@ -36,15 +36,6 @@ Byte    Type    Register
 
 #define INTERCHANGE_EEPROM_DEFAULT 0xFF
 
-// tests for a default I2C address and sets one if needed
-#ifndef FIRMWARE_I2C_ADDRESS
-#define FIRMWARE_I2C_ADDRESS 0x75
-#endif
-
-#ifndef FIRMWARE_VERSION
-#define FIRMWARE_VERSION "0.0.0"
-#endif
-
 enum states {
     BOOT,
     CONFIG,
@@ -61,10 +52,10 @@ extern states state;
 #define INTERCHANGE_VER_PATCH 0
 #define INTERCHANGE_VERSION "0.1.0"
 
-void interchange_init(); // initialises the interchange lib.
+void interchange_init(String fw_ver); // initialises the interchange lib.
 void attach_command(char code[], String help, CommandFuncPtr cb); 
 void config_check(); // checks to see if config pin is gone high
-void run_config(Stream& serport); // runs the config application.
+void run_config(Stream& serport, String fw_ver); // runs the config application.
 void interchange_commands(); // the main loop that processes the commands.
 
 // command related methods

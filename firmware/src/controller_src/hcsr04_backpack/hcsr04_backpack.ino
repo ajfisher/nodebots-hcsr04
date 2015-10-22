@@ -1,6 +1,7 @@
 #include "includes.h"
-#include "interchange.h"
 #include <avr/interrupt.h>
+
+#include "interchange.h"
 
 #if _VDEBUG
     #define PING_FREQUENCY 1000 // milliseconds between pings
@@ -47,7 +48,7 @@ void setup() {
 
     if (state == CONFIG) {
         Serial.begin(9600);
-        run_config(Serial);
+        run_config(Serial, FIRMWARE_VERSION);
     } else if (state == RUNNING) {
         Wire.begin(DEFAULT_I2C_SENSOR_ADDRESS);
         Wire.onRequest(requestData);

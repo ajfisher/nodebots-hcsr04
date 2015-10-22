@@ -10,10 +10,11 @@ byte firmware_id = 0x0;
 byte creator_id = 0x0;
 bool custom_i2c_addr = false;
 byte i2c_address = 0x0;
+String firmware_version = "";
 
 uint8_t current_commands = 0;
 
-void interchange_init() {
+void interchange_init(String fw_ver) {
     // initialises the commands.
     attach_command("HELP", F("Prints this list. Try HELP <CMD> for more"), command_help);
     attach_command("CLR", F("Clears the eeprom settings"), command_clear_eeprom);
@@ -37,13 +38,13 @@ void interchange_init() {
         custom_i2c_addr = (bool)EEPROM.read(INTERCHANGE_USE_CUSTOM);
     }
 
-    if (custom_i2c_addr) {
-        if (EEPROM.read(INTERCHANGE_I2C_ADDRESS) != INTERCHANGE_EEPROM_DEFAULT) {
-            i2c_address = EEPROM.read(INTERCHANGE_I2C_ADDRESS);
-        }
-    } else {
-        i2c_address = FIRMWARE_I2C_ADDRESS;
+    if (EEPROM.read(INTERCHANGE_I2C_ADDRESS) != INTERCHANGE_EEPROM_DEFAULT) {
+        i2c_address = EEPROM.read(INTERCHANGE_I2C_ADDRESS);
     }
+
+    firmware_version = fw_ver;
+
+
 
 }
 
@@ -77,7 +78,7 @@ void config_check() {
     }
 }
 
-void run_config(Stream& serport) {
+void run_config(Stream& serport, String fw_ver) {
     // runs the config application
     
     ser = &serport; // assign the stream to the serial port
@@ -86,7 +87,7 @@ void run_config(Stream& serport) {
     ser->print(F("Interchange version: "));
     ser->println(INTERCHANGE_VERSION);
     ser->println(F("\nEnter command, followed by NL. Type HELP for more."));
-    interchange_init();
+    interchange_init(fw_ver);
 }
 
 void interchange_commands() {
@@ -158,8 +159,6 @@ int command_item(String cmd_code) {
 void command_dump(String args) {
     // dumps the details of the firmware out.
 
-    ser->println("Dumping data");
-
     ser->print(F("{"));
     
     ser->print(F("\"fw_id\":"));
@@ -195,7 +194,7 @@ void command_dump(String args) {
     ser->print(F("\","));
 
     ser->print(F("\"fw_version\":\""));
-    ser->print(FIRMWARE_VERSION);
+    ser->print(firmware_version);
     ser->print(F("\","));
 
     ser->print(F("\"compile_date\":\""));
@@ -203,15 +202,6 @@ void command_dump(String args) {
     ser->print(F("\""));
 
     ser->println(F("}"));
-
-
-    /**
-    {
-        "fw_version": "x.y.z",
-    }
-    **/
-
-
 
 }
 
@@ -223,7 +213,12 @@ void command_clear_eeprom(String args) {
 void command_set_i2c(String args) {
     // sets the I2C address of the firmware
     //
+    if (args.length() <= 0) {
+        ser->println(F("ERR No address supplied"));
+        return;
+    }
     ser->println("Setting the I2C address");
+
 }
 
 void command_set_firmware_id(String args) {
