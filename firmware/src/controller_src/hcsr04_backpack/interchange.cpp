@@ -6,6 +6,9 @@ Command commands[MAX_COMMANDS]; // list of commands
 Stream* ser; // mapping to a serial port
 String command; // current command being worked on.
 
+uint8_t mem_addresses[] = {INTERCHANGE_I2C_ADDRESS, INTERCHANGE_USE_CUSTOM, INTERCHANGE_FIRMWARE_ID, INTERCHANGE_CREATOR_ID};
+uint8_t address_len = sizeof(mem_addresses); 
+
 byte firmware_id = 0x0;
 byte creator_id = 0x0;
 bool custom_i2c_addr = false;
@@ -43,8 +46,6 @@ void interchange_init(String fw_ver) {
     }
 
     firmware_version = fw_ver;
-
-
 
 }
 
@@ -111,12 +112,6 @@ void interchange_commands() {
 void process_command(String command) {
     // waits for the serial process to complete and then 
 
-    // create a buffer
-    // add chars to the buffer as it fills
-    // when you get a \n then you're complete
-    // process the message by pushing out to the other functions with appropriate
-    // paramaters
-
     String argv[2]; // two tokens, the command and the params.
 
     int8_t split = command.indexOf(' ');
@@ -154,7 +149,6 @@ int command_item(String cmd_code) {
         return (-1);
     }
 }
-
 
 void command_dump(String args) {
     // dumps the details of the firmware out.
@@ -208,6 +202,11 @@ void command_dump(String args) {
 void command_clear_eeprom(String args) {
     // sets the EEPROM address back to default
     ser->println("Clearing the EEPROM addresses");
+
+    for (uint8_t i = 0; i < address_len; i++) {
+        EEPROM.write(mem_addresses[i], INTERCHANGE_EEPROM_DEFAULT);
+    }
+    ser->println(F("OK EEPROM cleared"));
 }
 
 void command_set_i2c(String args) {
@@ -291,5 +290,3 @@ void command_help(String args) {
         ser->println(commands[cmd_index].help);
     }
 }
-
-
