@@ -29,6 +29,12 @@ void interchange_init(String fw_ver) {
     attach_command("CID", F("Sets the creator id. \n\n \
                 eg: cID 0x09 sets the creator id to 0x09"), command_set_creator_id); 
 
+    initialise_vars(fw_ver);
+}
+
+void initialise_vars(String fw_ver) {
+    // just initialises the variables from EEPROM etc.
+
     if (EEPROM.read(INTERCHANGE_CREATOR_ID) != INTERCHANGE_EEPROM_DEFAULT) {
         creator_id = EEPROM.read(INTERCHANGE_CREATOR_ID);
     }
@@ -46,7 +52,6 @@ void interchange_init(String fw_ver) {
     }
 
     firmware_version = fw_ver;
-
 }
 
 void attach_command(char code[], String help, CommandFuncPtr cb) {
@@ -125,7 +130,6 @@ void process_command(String command) {
     } else {
         ser->println("Invalid command");
     }
-
 }
 
 int command_item(String cmd_code) {
@@ -196,7 +200,6 @@ void command_dump(String args) {
     ser->print(F("\""));
 
     ser->println(F("}"));
-
 }
 
 void command_clear_eeprom(String args) {
@@ -206,6 +209,8 @@ void command_clear_eeprom(String args) {
     for (uint8_t i = 0; i < address_len; i++) {
         EEPROM.write(mem_addresses[i], INTERCHANGE_EEPROM_DEFAULT);
     }
+    initialise_vars(firmware_version);
+
     ser->println(F("OK EEPROM cleared"));
 }
 
@@ -222,7 +227,6 @@ void command_set_i2c(String args) {
     EEPROM.write(INTERCHANGE_I2C_ADDRESS, i2c_address);
     ser->print(F("OK I2C address set "));
     ser->println(i2c_address, HEX);
-
 }
 
 void command_set_firmware_id(String args) {

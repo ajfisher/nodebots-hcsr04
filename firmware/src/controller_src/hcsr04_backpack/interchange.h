@@ -53,6 +53,7 @@ extern states state;
 #define INTERCHANGE_VERSION "0.1.0"
 
 void interchange_init(String fw_ver); // initialises the interchange lib.
+void initialise_vars(String fw_ver); // used to init the vars used across
 void attach_command(char code[], String help, CommandFuncPtr cb); 
 void config_check(); // checks to see if config pin is gone high
 void run_config(Stream& serport, String fw_ver); // runs the config application.
