@@ -35,12 +35,6 @@ ISR(PCINT0_vect) {
     }
 }
 
-// TODO remove this
-void test_command(String args) {
-    // a test command
-    Serial.println("This is just a test");
-}
-
 void setup() {
 
     // check to see if we're in config mode
@@ -49,8 +43,21 @@ void setup() {
     if (state == CONFIG) {
         Serial.begin(9600);
         run_config(Serial, FIRMWARE_VERSION);
+
     } else if (state == RUNNING) {
-        Wire.begin(DEFAULT_I2C_SENSOR_ADDRESS);
+        uint8_t i2c_address;
+
+        if (use_custom_address() ) {
+            if (get_i2c_address() > 0) {
+                i2c_address = get_i2c_address();
+            } else {
+                i2c_address = DEFAULT_I2C_SENSOR_ADDRESS;
+            }
+        } else {
+            i2c_address = DEFAULT_I2C_SENSOR_ADDRESS;
+        }
+        
+        Wire.begin(i2c_address);
         Wire.onRequest(requestData);
     }
 
@@ -60,6 +67,10 @@ void setup() {
     }
 
     Serial.println(F("HCSR04 FIRMWARE - DEBUG MODE"));
+    Serial.print("Use custom: ");
+    Serial.println(use_custom_address());
+    Serial.print("I2C address: ");
+    Serial.println(get_i2c_address());
 #endif
 }
 
