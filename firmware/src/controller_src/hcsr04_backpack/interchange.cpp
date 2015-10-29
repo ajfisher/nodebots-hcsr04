@@ -96,6 +96,27 @@ void run_config(Stream& serport, String fw_ver) {
     interchange_init(fw_ver);
 }
 
+
+bool use_custom_address() {
+    // returns whether we should use the custom address or not
+    
+    if (EEPROM.read(INTERCHANGE_USE_CUSTOM) != INTERCHANGE_EEPROM_DEFAULT) {
+        return ((bool)EEPROM.read(INTERCHANGE_USE_CUSTOM));
+    }
+    return (false);
+}
+    
+uint8_t get_i2c_address() {
+    // returns the address from eeprom if set
+
+    if (EEPROM.read(INTERCHANGE_I2C_ADDRESS) != INTERCHANGE_EEPROM_DEFAULT) {
+        return((uint8_t) EEPROM.read(INTERCHANGE_I2C_ADDRESS));
+    }
+    return (0x0);
+}
+
+/** DEFINE INTERCHANGE INTERACTIVE COMMANDS HERE **/
+
 void interchange_commands() {
     // this is effectively the "main" loop of the interchange config system.
 
@@ -184,7 +205,7 @@ void command_dump(String args) {
     ser->print(F(","));
 
     ser->print(F("\"i2c_address\":"));
-    ser->print(i2c_address, HEX);
+    ser->print(i2c_address);
     ser->print(F(","));
 
     ser->print(F("\"ic_version\":\""));
@@ -227,6 +248,21 @@ void command_set_i2c(String args) {
     EEPROM.write(INTERCHANGE_I2C_ADDRESS, i2c_address);
     ser->print(F("OK I2C address set "));
     ser->println(i2c_address, HEX);
+
+    // set the custom I2C byte if needed.
+    if (args.length() >= 3) {
+        // we can check if the third byte is a 1 or 0 as a char.
+        // and use that to set the custom address or not.
+
+        if (args[2] == '1') {
+            custom_i2c_addr = true;
+        } else {
+            custom_i2c_addr = false;
+        }
+    }
+
+    EEPROM.write(INTERCHANGE_USE_CUSTOM, custom_i2c_addr);
+
 }
 
 void command_set_firmware_id(String args) {

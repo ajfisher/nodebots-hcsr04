@@ -58,6 +58,9 @@ void attach_command(char code[], String help, CommandFuncPtr cb);
 void config_check(); // checks to see if config pin is gone high
 void run_config(Stream& serport, String fw_ver); // runs the config application.
 void interchange_commands(); // the main loop that processes the commands.
+bool use_custom_address(); // returns whether we should use the custom address or not
+uint8_t get_i2c_address(); // returns the address from eeprom if set
+
 
 // command related methods
 int command_item(String cmd_code); // given a string, find the related command
