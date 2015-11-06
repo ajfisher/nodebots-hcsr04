@@ -1,7 +1,7 @@
-#define I2C_SENSOR_ADDRESS  0x27
-#define REGISTER_MAP_SIZE 2
-
 #include "includes.h"
+#include <avr/interrupt.h>
+
+#include "interchange.h"
 
 #if _VDEBUG
     #define PING_FREQUENCY 1000 // milliseconds between pings
@@ -14,14 +14,12 @@ byte register_map[REGISTER_MAP_SIZE];
 volatile int32_t duration; // duration of the ping
 int32_t last_ping_time = 0; // last time the ping occurred in ms
 int32_t ping_freq = PING_FREQUENCY;
-int32_t ping_emit_time = 0;  // time the ping was emitted in us
+volatile int32_t ping_emit_time = 0;  // time the ping was emitted in us
 
-bool pinging = false; // used to determine when we're pinging
-
+volatile bool pinging = false; // used to determine when we're pinging
 
 // Interrupt vector for external interrupt on pin PCINT7..0
-// This will be called when any of the pins D0 - D4 on the trinket change
-// or pins D8 - D13 on an Arduino Uno change.
+// This will be called when any of the pins D8 - D13 on an Arduino Uno change.
 
 // the ping pin will flip HIGH at the point when the pulse has completed
 // and timing should begin, it will then flip LOW once the sound wave is received
@@ -39,51 +37,63 @@ ISR(PCINT0_vect) {
 
 void setup() {
 
-#if defined( __AVR_ATtiny85__ )
-    // Set prescaler so CPU runs at 16MHz
-    if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
+    // check to see if we're in config mode
+    config_check();
 
-    // Use TinyWire for ATTINY
-    TinyWireS.begin(I2C_SENSOR_ADDRESS);
-    TinyWireS.onRequest(requestData);
+    if (state == CONFIG) {
+        Serial.begin(9600);
+        run_config(Serial, FIRMWARE_VERSION);
 
-#else
-    Wire.begin(I2C_SENSOR_ADDRESS);
-    Wire.onRequest(requestData);
-#endif
+    } else if (state == RUNNING) {
+        uint8_t i2c_address;
+
+        if (use_custom_address() ) {
+            if (get_i2c_address() > 0) {
+                i2c_address = get_i2c_address();
+            } else {
+                i2c_address = DEFAULT_I2C_SENSOR_ADDRESS;
+            }
+        } else {
+            i2c_address = DEFAULT_I2C_SENSOR_ADDRESS;
+        }
+        
+        Wire.begin(i2c_address);
+        Wire.onRequest(requestData);
+    }
 
 #if _DEBUG
-    Serial.begin(9600);
-    Serial.println("Ping Sensor I2C");
+    if (state != CONFIG) {
+        Serial.begin(9600);
+    }
+
+    Serial.println(F("HCSR04 FIRMWARE - DEBUG MODE"));
+    Serial.print("Use custom: ");
+    Serial.println(use_custom_address());
+    Serial.print("I2C address: ");
+    Serial.println(get_i2c_address());
 #endif
 }
 
 
 void loop() {
 
-    get_distance();
-
-#if defined( __AVR_ATtiny85__ )
-    // USE this for ATTINY as you can't use delay
-    TinyWireS_stop_check();
-#else
-    delay(20);
-#endif
+    if (state == RUNNING) {
+        get_distance();
+        delay(20);
+    } else if (state == CONFIG) {
+        interchange_commands();
+    }
 }
 
 void disablePCInterrupt() {
     // disable all interrupts temporarily
     cli();
 
-    // disable pin change interrupt
-    PCMSK &= ~_BV(PCINT4);
+    // disable pin change interrupt vector
+    PCMSK0 &= ~_BV(PCINT0);
 
     // clear pin change interrupt flag register
-#if defined( __AVR_ATtiny85__ )
-    GIFR &= ~_BV(PCIF);
-#else
     PCIFR &= ~_BV(PCIF2);
-#endif
     // re-enable all interrupts
     sei();
 }
@@ -92,15 +102,11 @@ void enablePCInterrupt() {
     // disable all interrupts temporarily
     cli();
 
-    // enable pin change interrupt on PB4 (D4 on Trinket, D12 on Uno)
-    PCMSK |= _BV(PCINT4);
+    // enable pin change interrupt on D8 
+    PCMSK0 |= _BV(PCINT0);
 
     // enable pin change interrupt 0
-#if defined( __AVR_ATtiny85__ )
-    GIMSK |= _BV(PCIE);
-#else
     PCICR |= _BV(PCIE0);
-#endif
     // re-enable all interrupts
     sei();
 }
@@ -147,14 +153,8 @@ void requestData() {
     register_map[0] = duration >> 8; // msb
     register_map[1] = duration & 0xFF; //LSB
 
-#if defined( __AVR_ATtiny85__ )
-    // ATTINY you need to do a send of each register individually.
-    TinyWireS.send(register_map[0]);
-    TinyWireS.send(register_map[1]);
-#else
     // ATMEGA cat write out a buffer
     Wire.write(register_map, REGISTER_MAP_SIZE);
-#endif
 
 #if _DEBUG
     Serial.print("rm: ");

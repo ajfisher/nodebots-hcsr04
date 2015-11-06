@@ -1,25 +1,17 @@
 #include <Wire.h>
 
-#include <avr/interrupt.h>
+#define DEFAULT_I2C_SENSOR_ADDRESS  0x27
+#define REGISTER_MAP_SIZE 2
 
-#if defined( __AVR_ATtiny85__ )
-    #include <TinyWireS.h>
-    #include <avr/power.h>
+#define FIRMWARE_VERSION "0.3.0"
 
-    #include <SendOnlySoftwareSerial.h>
-
-    SendOnlySoftwareSerial Serial(3);
-  
-    #define PING_PIN 4
-#else
-    #include <Wire.h>
-    #define PING_PIN 12
-#endif
+#define PING_PIN 8
 
 #ifndef _DEBUG
     #define _DEBUG false
 #endif
 
 #ifndef _VDEBUG
+    // verbose debug
     #define _VDEBUG false
 #endif
