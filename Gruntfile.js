@@ -14,21 +14,13 @@ var boards = {
     },
 };
 
+var boardlist = Object.keys(boards).toString();
+
 module.exports = function(grunt) {
  
     // configure the tasks
     grunt.initConfig({
         // exec: create task dynamically see end of file for where this happens.
-        /**exec: {
-            compile_firmata: {
-                cwd: "firmware/",
-                command:function(board) {
-                    return arduino + " --verify --verbose-build --board "  + boards[board].package + 
-                    " --pref build.path=bin/firmata/" + board +  " build/hcsr04_firmata/hcsr04_firmata.ino";
-                },
-            },
-        },**/
-
         copy: {
             options: {
                 timestamp: true,
@@ -64,6 +56,12 @@ module.exports = function(grunt) {
                         'firmware/bin/firmata/*'
                     ]
             },
+            post_compile: {
+                src: [
+                        'firmware/bin/backpack/{' + boardlist + '}/!(*ino.hex)',
+                        'firmware/bin/firmata/{' + boardlist + '}/!(*ino.hex)'
+                    ]
+            },
         },
         nodeunit: {
             all: ['test/',],
@@ -84,18 +82,18 @@ module.exports = function(grunt) {
         grunt.config(["exec", "firmata_" + key], {
             command:function() {
                 return arduino + " --verify --verbose-build --board "  + boards[key].package + 
-                " --pref build.path=bin/firmata/" + key +  " build/hcsr04_firmata/hcsr04_firmata.ino";
+                " --pref build.path=firmware/bin/firmata/" + key +  " firmware/build/hcsr04_firmata/hcsr04_firmata.ino";
             },
         });
         grunt.config(["exec", "backpack_" + key], {
             command:function() {
                 return arduino + " --verify --verbose-build --board "  + boards[key].package + 
-                " --pref build.path=bin/backpack/" + key +  " build/hcsr04_backpack/hcsr04_backpack.ino";
+                " --pref build.path=firmware/bin/backpack/" + key +  " firmware/build/hcsr04_backpack/hcsr04_backpack.ino";
             },
         });
     });
 
     grunt.registerTask('test', ['nodeunit:all']);
-    grunt.registerTask('build', ['clean', 'copy']);
-    grunt.registerTask('compile', ['build', 'exec']);
+    grunt.registerTask('build', ['clean:firmware_build', 'clean:compiled_bins', 'copy']);
+    grunt.registerTask('compile', ['build', 'exec', 'clean:post_compile']);
 };
