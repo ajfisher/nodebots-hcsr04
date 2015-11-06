@@ -1,5 +1,12 @@
 # Changelog for HC-SR04 ultrasonic sensor 
 
+## 0.3.0
+
+* Modified build script to use dynamic tasks for the execution of the compilation step
+* Ported original gist file of I2C backpack across and updated
+* Updated grunt for the backpack build process.
+* First draft of interchange library which can be used for other projects.
+
 ### 0.2.2
 
 * updated manifest file to reflect new structure to account for both custom firmata 
