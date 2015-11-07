@@ -243,26 +243,38 @@ void command_set_i2c(String args) {
         ser->println(F("ERR No address supplied"));
         return;
     }
+
+    // now we need to get the I2C address and potentially whether it's
+    // a custom address or not.
+
+    String argv[2]; // up to two tokens, the address and custom bit.
     
-    i2c_address = (byte)args[0];
+    int8_t split = args.indexOf(' ');
+    argv[0] = args.substring(0, split);
+    if (split > 0) {
+        argv[1] = args.substring(split+1);
+    } else {
+        argv[1] = "0";
+    }
+
+    char buf[10];
+    argv[0].toCharArray(buf, 10);
+    i2c_address = (byte)atoi(buf);
+
     EEPROM.write(INTERCHANGE_I2C_ADDRESS, i2c_address);
     ser->print(F("OK I2C address set "));
     ser->println(i2c_address, HEX);
 
     // set the custom I2C byte if needed.
-    if (args.length() >= 3) {
-        // we can check if the third byte is a 1 or 0 as a char.
-        // and use that to set the custom address or not.
-
-        if (args[2] == '1') {
-            custom_i2c_addr = true;
-        } else {
-            custom_i2c_addr = false;
-        }
+    // we can check if the third byte is a 1 or 0 as a char.
+    // and use that to set the custom address or not.
+    if (argv[1][0] == '1') {
+        custom_i2c_addr = true;
+    } else {
+        custom_i2c_addr = false;
     }
 
     EEPROM.write(INTERCHANGE_USE_CUSTOM, custom_i2c_addr);
-
 }
 
 void command_set_firmware_id(String args) {

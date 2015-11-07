@@ -48,9 +48,9 @@ extern states state;
 #define CONFIG_PIN 2
 
 #define INTERCHANGE_VER_MAJ 0
-#define INTERCHANGE_VER_MIN 1
+#define INTERCHANGE_VER_MIN 2
 #define INTERCHANGE_VER_PATCH 0
-#define INTERCHANGE_VERSION "0.1.0"
+#define INTERCHANGE_VERSION "0.2.0"
 
 void interchange_init(String fw_ver); // initialises the interchange lib.
 void initialise_vars(String fw_ver); // used to init the vars used across
