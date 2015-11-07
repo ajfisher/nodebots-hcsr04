@@ -3,7 +3,7 @@
 #define DEFAULT_I2C_SENSOR_ADDRESS  0x27
 #define REGISTER_MAP_SIZE 2
 
-#define FIRMWARE_VERSION "0.3.0"
+#define FIRMWARE_VERSION "0.3.1"
 
 #define PING_PIN 8
 
