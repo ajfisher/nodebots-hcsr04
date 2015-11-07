@@ -1,5 +1,10 @@
 # Changelog for HC-SR04 ultrasonic sensor 
 
+## 0.4.0
+
+* Made interchange more literal rather than trying to deal with bytes encoded
+in weird ways. Will now just read a number as a sequence of chars.
+
 ### 0.3.1
 
 * Fixed dev dependency requirements.
