@@ -1,5 +1,9 @@
 # Changelog for HC-SR04 ultrasonic sensor 
 
+### 0.3.1
+
+* Fixed dev dependency requirements.
+
 ## 0.3.0
 
 * Modified build script to use dynamic tasks for the execution of the compilation step
