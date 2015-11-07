@@ -273,7 +273,9 @@ void command_set_firmware_id(String args) {
         return;
     }
     
-    firmware_id = (byte)args[0];
+    char buf[10];
+    args.toCharArray(buf, 10);
+    firmware_id = atoi(buf);
     EEPROM.write(INTERCHANGE_FIRMWARE_ID, firmware_id);
     ser->print(F("OK firmware ID set "));
     ser->println(firmware_id, HEX);
@@ -287,7 +289,9 @@ void command_set_creator_id(String args) {
         return;
     }
     
-    creator_id = (byte)args[0];
+    char buf[10];
+    args.toCharArray(buf, 10);
+    creator_id = atoi(buf);
     EEPROM.write(INTERCHANGE_CREATOR_ID, creator_id);
     ser->print(F("OK creator ID set "));
     ser->println(creator_id, HEX);
