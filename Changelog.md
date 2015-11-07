@@ -1,5 +1,9 @@
 # Changelog for HC-SR04 ultrasonic sensor 
 
+### 0.4.1
+
+* Updated to use `pro-mini` board type to be in line with avrgirl.
+
 ## 0.4.0
 
 * Made interchange more literal rather than trying to deal with bytes encoded

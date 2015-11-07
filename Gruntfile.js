@@ -8,7 +8,7 @@ var boards = {
         cpu: "atmega328",
         package: "arduino:avr:nano:cpu=atmega328",
     },
-    "promini": {
+    "pro-mini": {
         cpu: "16MHzatmega328",
         package: "arduino:avr:pro:cpu=16MHzatmega328",
     },
