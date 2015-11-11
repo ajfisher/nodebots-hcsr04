@@ -3,6 +3,8 @@
 ### 0.4.1
 
 * Updated to use `pro-mini` board type to be in line with avrgirl.
+* Better docs
+* updated all the bins
 
 ## 0.4.0
 

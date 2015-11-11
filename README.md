@@ -1,7 +1,9 @@
 # HC-SR04 Ultrasonic Sensor package for Johnny Five
 
-![](https://img.shields.io/badge/status-Not%20ready-red.svg)
+![](https://img.shields.io/badge/version-0.4.1-blue.svg)
+![](https://img.shields.io/badge/status-Ready-green.svg)
 ![](https://img.shields.io/github/issues/ajfisher/nodebots-hcsr04.svg)
+![](https://img.shields.io/npm/v/nodebots-hcsr04.svg)
 
 By default HCSR04 ultrasonic sensors don't work with johnny-five. This is because
 they use a custom protocol that requires pulseIn which is not part of the core
