@@ -534,6 +534,8 @@ void sysexCallback(byte command, byte argc, byte *argv)
           Firmata.write(1);
           Firmata.write((byte)OUTPUT);
           Firmata.write(1);
+          Firmata.write((byte)PING_READ);
+          Firmata.write(1);
         }
         if (IS_PIN_ANALOG(pin)) {
           Firmata.write(ANALOG);
@@ -616,7 +618,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
                 + ((unsigned long)timeoutArray[2] << 8)
                 + ((unsigned long)timeoutArray[3]);
       pinMode(argv[0],INPUT);
-      duration = pulseIn(argv[0], argv[1],timeout);
+      duration = pulseIn(argv[0], argv[1], timeout);
       responseArray[0] = argv[0];
       responseArray[1] = (((unsigned long)duration >> 24) & 0xFF) ;
       responseArray[2] = (((unsigned long)duration >> 16) & 0xFF) ;
