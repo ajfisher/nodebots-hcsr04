@@ -64,7 +64,7 @@ Currently supported devices (and their board names):
 
 To install, you need to put your backpack into "configuration mode". After flashing,
 this will configure the board with firmware IDs and default I2C address. Simply
-jump pin D2 HIGH (connect D2 to 5V). Once complete, remove this jumper to use
+pull pin D2 HIGH (connect D2 to 5V). Once complete, remove this jumper to use
 normally (see wiring diagram below).
 
 ![Configuration mode for Interchange Backpack](docs/img/backpack_program_bb.png)
@@ -83,6 +83,12 @@ use it with the Johnny Five controller. Note that the trigger and echo are
 wired to the same pin which is D8 on the backpack.
 
 ![Circuit for I2C backpack](docs/img/backpack_ping_bb.png)
+
+If you want to use multiple ping sensors (up to 6) on the one backpack then you
+can do this as well as the backpack supports it. Just wire in additional HC-SR04
+modules along PORT B (pins 8-13 on a standard arduino). On output the data
+will come back as an array of distances with Pin 8 being element 1, Pin 9 element 2
+etc through to Pin 13 being element 6 in the returned array.
 
 ### Custom firmata
 

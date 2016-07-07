@@ -6,6 +6,10 @@
 * Merged in preferred methods of doing cability mapping on the pins to ensure
 they are allowed to do pin reads (which firmata.js looks for to see if it can use
 this controller)
+* Updated Backpack controller to allow for up to 6 HCSR04 sensors on the one
+backpack, allowing you to take multiple readings at once at a rate of up to 6
+sensors approx once every 150ms.
+* Docs and circuits to support all of this
 
 ### 0.4.1
 
