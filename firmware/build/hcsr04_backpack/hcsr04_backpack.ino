@@ -4,7 +4,7 @@
 #include "interchange.h"
 
 #if _VDEBUG
-    #define PING_FREQUENCY 150 // go slow so we can see what is happening
+    #define PING_FREQUENCY 100 // go slow so we can see what is happening
 #else
     #define PING_FREQUENCY 25 // go more or less as fast as possible, assuming wait out of 20ms
 #endif
@@ -13,6 +13,11 @@ byte register_map[REGISTER_MAP_SIZE];
 
 byte current_pin = START_PIN;
 byte current_duration_index = 0;
+
+byte read_register = 0;
+
+
+byte no_pins = NO_PINS; // done this way to take a default and change it if needed later.
 
 volatile int32_t durations[NO_PINS];
 
@@ -86,6 +91,7 @@ void setup() {
 
         Wire.begin(i2c_address);
         Wire.onRequest(requestData);
+        Wire.onReceive(receiveData);
 
         // enable timer interrupt to determine timeouts
         OCR0A = 0xAF;
@@ -211,19 +217,41 @@ void get_distance() {
 
 void requestData() {
 
-    for (uint8_t i = 0; i < NO_PINS; i++) {
-        register_map[i*2] = durations[i] >> 8; // msb
-        register_map[i*2 + 1] = durations[i] & 0xFF; //LSB
-    }
+    // the return_pin is set to the appropriate
+
+    //for (uint8_t i = 0; i < NO_PINS; i++) {
+        register_map[0] = durations[read_register] >> 8; // msb
+        register_map[1] = durations[read_register] & 0xFF; //LSB
+    //}
 
     // ATMEGA cat write out a buffer
     Wire.write(register_map, REGISTER_MAP_SIZE);
 
 #if _DEBUG
     Serial.print("rm: ");
+    Serial.print(read_register);
+    Serial.print(" ");
     Serial.print(register_map[0]);
     Serial.print(" ");
     Serial.print(register_map[1]);
     Serial.println();
 #endif
+}
+
+void receiveData(int numBytes) {
+    // receives info such as the current register info
+
+    // we get the first byte only as this is the pin to return.
+    byte data = Wire.read();
+
+    // user sends a pin, we want to line that up with the durations array
+    if (data < START_PIN) {
+        read_register = 0;
+    } else {
+        read_register = data - START_PIN;
+    }
+    // read off the rest as we don't need them
+    for (uint8_t i = 1; i <= numBytes; i++) {
+        Wire.read();
+    }
 }
