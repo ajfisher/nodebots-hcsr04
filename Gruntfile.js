@@ -17,7 +17,7 @@ var boards = {
 var boardlist = Object.keys(boards).toString();
 
 module.exports = function(grunt) {
- 
+
     // configure the tasks
     grunt.initConfig({
         // exec: create task dynamically see end of file for where this happens.
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         },
         clean: {
             firmware_build: {
-                src: [  
+                src: [
                         'firmware/build/hcsr04_firmata',
                         'firmware/build/hcsr04_backpack',
                      ]
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
             },
         },
     });
- 
+
     // load the tasks
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -81,13 +81,13 @@ module.exports = function(grunt) {
     Object.keys(boards).forEach(function(key) {
         grunt.config(["exec", "firmata_" + key], {
             command:function() {
-                return arduino + " --verify --verbose-build --board "  + boards[key].package + 
+                return arduino + " --verify --verbose-build --board "  + boards[key].package +
                 " --pref build.path=firmware/bin/firmata/" + key +  " firmware/build/hcsr04_firmata/hcsr04_firmata.ino";
             },
         });
         grunt.config(["exec", "backpack_" + key], {
             command:function() {
-                return arduino + " --verify --verbose-build --board "  + boards[key].package + 
+                return arduino + " --verify --verbose-build --board "  + boards[key].package +
                 " --pref build.path=firmware/bin/backpack/" + key +  " firmware/build/hcsr04_backpack/hcsr04_backpack.ino";
             },
         });

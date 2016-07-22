@@ -2,9 +2,10 @@
 
 ## 0.5.0
 
-* Updated dependencies
-* Updated all the bins
-* Updated firmata to 2.5.1
+* Updated to firmata 2.5.1
+* Merged in preferred methods of doing cability mapping on the pins to ensure
+they are allowed to do pin reads (which firmata.js looks for to see if it can use
+this controller)
 
 ### 0.4.1
 
